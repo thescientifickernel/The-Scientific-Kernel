@@ -9,17 +9,32 @@ interface CarouselProps<T> {
   interval?: number;
 }
 
-export default function Carousel<T>({ items, renderItem, autoRotate = true, interval = 5000 }: CarouselProps<T>) {
+export default function Carousel<T>({ items, renderItem, autoRotate = false, interval = 5000 }: CarouselProps<T>) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [visibleItems, setVisibleItems] = useState(3);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) setVisibleItems(1);
+      else if (window.innerWidth < 1024) setVisibleItems(2);
+      else if (window.innerWidth < 1280) setVisibleItems(3);
+      else setVisibleItems(6);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const maxIndex = Math.max(0, items.length - visibleItems);
+
   const next = () => {
-    setCurrentIndex((prev) => (prev + 1) % items.length);
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
   };
 
   const prev = () => {
-    setCurrentIndex((prev) => (prev - 1 + items.length) % items.length);
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   };
 
   useEffect(() => {
@@ -29,12 +44,7 @@ export default function Carousel<T>({ items, renderItem, autoRotate = true, inte
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [autoRotate, isPaused, items.length]);
-
-  // Calculate visible items based on screen size
-  // For simplicity in this implementation, we'll show 1, 2, or 3 items
-  // but the carousel logic here is a simple single-item transition for robustness.
-  // We'll wrap the renderItem in a grid for the desktop view.
+  }, [autoRotate, isPaused, items.length, maxIndex]);
 
   return (
     <div 
@@ -42,13 +52,20 @@ export default function Carousel<T>({ items, renderItem, autoRotate = true, inte
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="overflow-hidden px-4 py-8">
+      <div className="overflow-hidden py-8">
         <div 
           className="flex transition-transform duration-500 ease-out gap-6"
-          style={{ transform: `translateX(-${currentIndex * (100 / items.length)}%)`, width: `${items.length * 100}%` }}
+          style={{ 
+            transform: `translateX(-${currentIndex * (100 / visibleItems)}%)`,
+            width: `${(items.length / visibleItems) * 100}%` 
+          }}
         >
           {items.map((item, i) => (
-            <div key={i} style={{ width: `${100 / items.length}%` }}>
+            <div 
+              key={i} 
+              style={{ width: `${100 / items.length}%` }}
+              className="px-1"
+            >
               {renderItem(item)}
             </div>
           ))}
@@ -58,20 +75,20 @@ export default function Carousel<T>({ items, renderItem, autoRotate = true, inte
       {/* Controls */}
       <button 
         onClick={prev}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all z-10"
+        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all z-10 shadow-lg hover:bg-surface-hover"
       >
         <ChevronLeft size={24} />
       </button>
       <button 
         onClick={next}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all z-10"
+        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all z-10 shadow-lg hover:bg-surface-hover"
       >
         <ChevronRight size={24} />
       </button>
 
       {/* Dots */}
       <div className="flex justify-center gap-2 mt-4">
-        {items.map((_, i) => (
+        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrentIndex(i)}
