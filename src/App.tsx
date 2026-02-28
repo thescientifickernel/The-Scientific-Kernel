@@ -1,29 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   BookOpen, 
   FlaskConical, 
   Users, 
-  Info
+  Info, 
+  ChevronRight, 
+  Play, 
+  MessageSquare, 
+  BookMarked,
+  ArrowRight,
+  Menu,
+  X,
+  ExternalLink,
+  Search,
+  ThumbsUp,
+  Clock,
+  Tag,
+  ArrowLeft,
+  Lock,
+  LayoutDashboard,
+  FileText,
+  Video,
+  BarChart3,
+  Plus,
+  Eye,
+  EyeOff,
+  Save,
+  LogOut
 } from 'lucide-react';
-import { Section, VaultItem, VideoInfo } from './types';
+import { Section, VaultItem, VideoInfo, GuestbookEntry, TopicSuggestion, Difficulty } from './types';
+import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
-
-// Layout Components
-import Navbar from './components/layout/Navbar';
-import Footer from './components/layout/Footer';
-
-// Page Components
-import Home from './components/home/HomeContent';
-import Vault from './components/vault/VaultList';
-import Lab from './components/lab/LabList';
-import Community from './components/community/CommunityHome';
-import CommunityTopics from './components/community/CommunityTopics';
-import CommunityGuestbook from './components/community/CommunityGuestbook';
-import About from './components/about/AboutContent';
-import AdminPanel from './components/admin/AdminPanel';
-import KernelDetail from './components/vault/KernelDetail';
-import LabDetail from './components/lab/LabDetail';
+import Carousel from './components/Carousel';
+import StatsStrip from './components/StatsStrip';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<Section>('home');
@@ -80,14 +90,110 @@ export default function App() {
     <div className="min-h-screen bg-bg text-text-main selection:bg-amber-primary/30">
       <ScrollToTop />
       
-      <Navbar 
-        activeSection={activeSection}
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        user={user}
-        handleNavigate={handleNavigate}
-        navLinks={navLinks}
-      />
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-xl border-b border-border px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <button 
+            onClick={() => handleNavigate('home')}
+            className="flex items-center gap-3 group"
+          >
+            <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-amber-primary/10 border border-amber-primary/20 group-hover:border-amber-primary/40 transition-colors">
+              <span className="text-2xl">🍿</span>
+            </div>
+            <span className="font-serif text-xl font-bold tracking-tight">
+              The <span className="text-amber-primary">Scientific</span> Kernel
+            </span>
+          </button>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => handleNavigate(link.id as Section)}
+                className={`text-sm font-medium tracking-wide uppercase transition-colors hover:text-amber-primary ${
+                  activeSection === link.id ? 'text-amber-primary' : 'text-text-muted'
+                }`}
+              >
+                {link.label}
+              </button>
+            ))}
+            {user ? (
+              <button 
+                onClick={() => handleNavigate('admin' as Section)}
+                className={`flex items-center gap-2 text-sm font-medium tracking-wide uppercase transition-colors hover:text-amber-primary ${
+                  activeSection === 'admin' ? 'text-amber-primary' : 'text-text-muted'
+                }`}
+              >
+                <Lock size={14} /> Admin
+              </button>
+            ) : (
+              <button 
+                onClick={async () => {
+                  const res = await fetch('/api/auth/google/url');
+                  const { url } = await res.json();
+                  window.open(url, 'oauth_popup', 'width=600,height=700');
+                }}
+                className="text-sm font-medium tracking-wide uppercase text-text-muted hover:text-amber-primary"
+              >
+                Login
+              </button>
+            )}
+            <ThemeToggle />
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <div className="flex items-center gap-4 md:hidden">
+            <ThemeToggle />
+            <button 
+              className="text-text-muted"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile Nav Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-40 bg-bg pt-24 px-6 md:hidden"
+          >
+            <div className="flex flex-col gap-6">
+              {navLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => {
+                    handleNavigate(link.id as Section);
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center gap-4 text-2xl font-serif"
+                >
+                  <link.icon className="text-amber-primary" />
+                  {link.label}
+                </button>
+              ))}
+              {user && (
+                <button
+                  onClick={() => {
+                    handleNavigate('admin' as Section);
+                    setIsMenuOpen(false);
+                  }}
+                  className="flex items-center gap-4 text-2xl font-serif"
+                >
+                  <Lock className="text-amber-primary" />
+                  Admin
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="pt-20">
         <AnimatePresence mode="wait">
@@ -108,7 +214,22 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <Footer />
+      <footer className="border-t border-border py-12 px-6 mt-24">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🍿</span>
+            <span className="font-serif text-lg font-bold">The Scientific Kernel</span>
+          </div>
+          <p className="text-text-muted text-sm text-center md:text-left">
+            Pharmaceutical science explained simply — from molecule to patient care, one kernel at a time.
+          </p>
+          <div className="flex gap-6 text-text-muted text-sm">
+            <a href="#" className="hover:text-amber-primary transition-colors">Twitter</a>
+            <a href="#" className="hover:text-amber-primary transition-colors">LinkedIn</a>
+            <a href="https://www.youtube.com/channel/UC3H6Cr59so5OAKgIueIZXGg" target="_blank" rel="noopener noreferrer" className="hover:text-amber-primary transition-colors">YouTube</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
