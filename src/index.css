@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-dm: "DM Sans", sans-serif;
+
+  --color-bg: #0d0f14;
+  --color-bg-alt: #13161e;
+  --color-surface: #1e2230;
+  --color-surface-hover: #242840;
+  --color-amber-primary: #e8a020;
+  --color-amber-light: #f5c052;
+  --color-blue-primary: #4a90d9;
+  --color-text-main: #e8e4dc;
+  --color-text-muted: #8a8fa8;
+  --color-border: rgba(255,255,255,0.06);
+}
+
+@layer base {
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f9fafb;
+    --surface: #f3f4f6;
+    --surface-hover: #e5e7eb;
+    --text-main: #111827;
+    --text-muted: #4b5563;
+    --border: rgba(0,0,0,0.06);
+  }
+
+  .dark {
+    --bg: #0d0f14;
+    --bg-alt: #13161e;
+    --surface: #1e2230;
+    --surface-hover: #242840;
+    --text-main: #e8e4dc;
+    --text-muted: #8a8fa8;
+    --border: rgba(255,255,255,0.06);
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text-main);
+    @apply font-dm font-light transition-colors duration-300;
+  }
+}
+
+.kernel-gradient {
+  background: radial-gradient(circle at 50% 50%, rgba(232, 160, 32, 0.15) 0%, transparent 70%);
+}
+
+.glass-card {
+  background-color: color-mix(in srgb, var(--surface) 50%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+}
+
+.prose h2 {
+  @apply font-serif text-3xl font-bold mt-12 mb-6 text-amber-primary;
+}
+
+.prose p {
+  @apply mb-4 leading-relaxed;
+}
+
+.prose ul {
+  @apply list-disc pl-6 mb-6 space-y-2;
+}
+
+.prose table {
+  @apply w-full border-collapse mb-8;
+}
+
+.prose th, .prose td {
+  @apply border border-border p-3 text-left;
+}
+
+.prose th {
+  @apply bg-surface font-bold;
+}
+
+/* Hide scrollbar for carousel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
