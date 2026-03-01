@@ -6,7 +6,7 @@ export const POP_EXPLAINERS: VideoInfo[] = [
     title: "Drug Development",
     url: "https://youtu.be/NPdbEZ3nFDY",
     thumbnail: "https://img.youtube.com/vi/NPdbEZ3nFDY/maxresdefault.jpg",
-    description: "The journey from molecule to medicine explained through the popcorn factory analogy.",
+    description: "The journey from molecule to medicine explained through the popcorn analogy.",
     category: "Drug Development",
     publishedAt: "2024-01-01"
   },
@@ -102,10 +102,10 @@ export const POP_EXPLAINERS: VideoInfo[] = [
   },
   {
     id: "9Z_BOBK2Ytc",
-    title: "ISA 88 and ISA 95 Rules Behind Every Pill",
+    title: "ISA 88 and ISA 95 - Rules Behind Every Pill",
     url: "https://youtu.be/9Z_BOBK2Ytc",
     thumbnail: "https://img.youtube.com/vi/9Z_BOBK2Ytc/maxresdefault.jpg",
-    description: "Bridging the gap between discovery and delivery through pre-competitive collaboration.",
+    description: "Why do we have so many standards? Exploring the gap between the shop floor and the boardroom.",
     category: "Alliances",
     publishedAt: "2024-01-12"
   }
@@ -114,19 +114,19 @@ export const POP_EXPLAINERS: VideoInfo[] = [
 export const KERNEL_VAULT: VaultItem[] = [
   {
     id: "drug-development",
-    title: "The Popcorn Medicine Factory",
+    title: "The Drug Development Lifecycle",
     category: "Drug Development",
-    description: "Have you ever wondered how a tiny pill gets made and reaches a patient? It's a wild, wonderful, 10–15 year journey — and we're going to explain it using popcorn!",
+    description: "A comprehensive guide to the 10–15 year journey of bringing a new medicine to patients, using the popcorn analogy to explain the complex drug development lifecycle.",
     difficulty: "Sprout",
-    readTime: "10 min",
+    readTime: "12 min",
     publishedAt: "2024-01-01",
     content: `
       <div class="prose prose-invert max-w-none">
         <!-- Hero Intro -->
         <div class="mb-16 p-12 rounded-[3rem] bg-gradient-to-br from-amber-primary/20 via-amber-primary/5 to-transparent border border-amber-primary/30 relative overflow-hidden shadow-2xl shadow-amber-primary/5">
           <div class="absolute -top-10 -right-10 p-8 opacity-10 text-[12rem] rotate-12">🍿</div>
-          <h2 class="text-5xl font-serif font-bold text-amber-primary mb-8 italic leading-tight">The Popcorn Medicine Factory:<br/><span class="text-text-main not-italic">A Journey from Kernel to Cure</span></h2>
-          <p class="text-2xl leading-relaxed mb-8 text-text-main/90">Drug development is the most complex manufacturing process on Earth. It is the art and science of transforming a biological hypothesis into a stable, safe, and effective medicine that can be produced at scale for millions of people.</p>
+          <h2 class="text-5xl font-serif font-bold text-amber-primary mb-8 italic leading-tight">The Drug Development Lifecycle:<br/><span class="text-text-main not-italic">From Molecule to Medicine</span></h2>
+          <p class="text-2xl leading-relaxed mb-8 text-text-main/90">Drug development is like making the perfect batch of popcorn. It starts with a kernel, requires the right environment, and results in something that expands into a life-saving therapy.</p>
           <div class="flex flex-wrap gap-6">
             <div class="px-6 py-3 bg-amber-primary/10 rounded-2xl border border-amber-primary/20 flex items-center gap-3">
               <span class="text-amber-primary font-bold">AVG COST:</span>
@@ -142,9 +142,9 @@ export const KERNEL_VAULT: VaultItem[] = [
         <!-- The Core Philosophy -->
         <div class="my-24 grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <h3 class="text-3xl font-serif font-bold mb-6 italic">The Kernel Paradox</h3>
-            <p class="text-lg leading-relaxed text-text-muted mb-6">In the lab, you might find a molecule that works perfectly. But a single molecule is not a medicine. To become a medicine, that molecule must be stable, it must be deliverable (pill, injection, inhaler), and it must be reproducible. If you can't make 10 million identical copies of that molecule, you don't have a drug.</p>
-            <p class="text-lg leading-relaxed text-text-muted">This is where <strong>CMC (Chemistry, Manufacturing, and Controls)</strong> comes in. CMC is the "factory" that ensures every single "pop" is identical to the last.</p>
+            <h3 class="text-3xl font-serif font-bold mb-6 italic">The Reproducibility Challenge</h3>
+            <p class="text-lg leading-relaxed text-text-muted mb-6">Identifying a promising molecule in a laboratory setting is only the first step. To become a viable medicine, that molecule must be stable, deliverable in a specific dosage form (e.g., tablet, injection), and capable of being reproduced at scale with absolute consistency. If a process cannot yield millions of identical units, it is not a pharmaceutical product.</p>
+            <p class="text-lg leading-relaxed text-text-muted">This is the domain of <strong>CMC (Chemistry, Manufacturing, and Controls)</strong>. CMC ensures that every unit produced meets the same rigorous quality standards as the batches used in clinical trials.</p>
           </div>
           <div class="p-10 bg-surface border border-border rounded-[2.5rem] relative">
             <div class="absolute top-4 right-6 text-xs font-mono text-amber-primary uppercase tracking-widest">The CMC Pillar</div>
@@ -290,10 +290,10 @@ export const KERNEL_VAULT: VaultItem[] = [
           <div class="relative pl-20 group">
             <div class="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-blue-primary flex items-center justify-center text-white font-bold shadow-[0_0_30px_rgba(59,130,246,0.5)] z-10 group-hover:scale-110 transition-transform duration-500">M</div>
             <div class="text-xs font-mono text-blue-primary mb-4 uppercase tracking-[0.4em] font-bold">The Manufacturing Scale-Up</div>
-            <h3 class="text-4xl font-bold mb-8">Popping at Scale</h3>
+            <h3 class="text-4xl font-bold mb-8">Industrial Scale Production</h3>
             <div class="grid lg:grid-cols-2 gap-12">
               <div class="space-y-6">
-                <p class="text-xl leading-relaxed text-text-muted">Making one kernel pop is easy. Making 10 billion kernels pop exactly the same way is <strong>Process Engineering</strong>. We move from small batches to massive industrial production.</p>
+                <p class="text-xl leading-relaxed text-text-muted">Transitioning from laboratory-scale synthesis to commercial production is a monumental task in <strong>Process Engineering</strong>. The goal is to move from small batches to massive industrial output without compromising quality.</p>
                 <div class="p-8 bg-surface border border-border rounded-3xl">
                   <h4 class="font-bold mb-4 text-blue-primary">Key Challenges:</h4>
                   <ul class="space-y-2 text-sm text-text-muted">
@@ -341,8 +341,8 @@ export const KERNEL_VAULT: VaultItem[] = [
         <!-- Conclusion -->
         <div class="mt-40 p-16 rounded-[3.5rem] bg-surface border border-border text-center relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-amber-primary to-transparent"></div>
-          <h2 class="text-4xl font-serif font-bold mb-8 italic">The Kernel of Truth</h2>
-          <p class="text-xl text-text-muted max-w-3xl mx-auto leading-relaxed mb-12">Drug development is a high-stakes gamble with human lives and billions of dollars. But when a kernel finally pops, it changes the world. Every pill, every vial, and every injection is a testament to a decade of relentless scientific pursuit.</p>
+          <h2 class="text-4xl font-serif font-bold mb-8 italic">The Scientific Pursuit</h2>
+          <p class="text-xl text-text-muted max-w-3xl mx-auto leading-relaxed mb-12">Drug development is a high-stakes endeavor requiring immense investment and scientific rigor. However, successful development results in life-changing therapies. Every pharmaceutical product is a testament to years of dedicated research and engineering excellence.</p>
           <div class="inline-flex items-center gap-3 px-8 py-4 bg-amber-primary text-bg font-bold rounded-2xl shadow-xl shadow-amber-primary/20 hover:scale-105 transition-transform cursor-pointer">
             Explore the CMC Deep Dive →
           </div>
@@ -354,7 +354,7 @@ export const KERNEL_VAULT: VaultItem[] = [
     id: "pq-cmc",
     title: "PQ/CMC Deep Dive",
     category: "Quality",
-    description: "A complete, beginner-friendly guide to Pharmaceutical Quality / Chemistry, Manufacturing & Controls — the domains, the eCTD document structure, and the FDA's FHIR digital submission initiative.",
+    description: "A complete, beginner-friendly guide to Pharmaceutical Quality / Chemistry, Manufacturing & Controls — the domains, the eCTD document structure, and why it's like popping corn.",
     difficulty: "Fully Popped",
     readTime: "15 min",
     publishedAt: "2024-01-02",
@@ -363,8 +363,8 @@ export const KERNEL_VAULT: VaultItem[] = [
         <!-- Hero Section -->
         <div class="mb-16 p-12 rounded-[3rem] bg-gradient-to-br from-blue-primary/20 via-blue-primary/5 to-transparent border border-blue-primary/30 relative overflow-hidden shadow-2xl shadow-blue-primary/5">
           <div class="absolute -top-10 -right-10 p-8 opacity-10 text-[12rem] font-serif rotate-12">Q</div>
-          <h2 class="text-5xl font-serif font-bold mb-8 leading-tight">PQ/CMC Deep Dive:<br/><span class="text-blue-primary italic">The Evidence of Quality</span></h2>
-          <p class="text-2xl leading-relaxed text-text-muted mb-8">Pharmaceutical Quality / Chemistry, Manufacturing & Controls (PQ/CMC) is the scientific backbone of a drug application. It is the proof that a medicine is consistently pure, potent, and stable from the first batch to the millionth.</p>
+          <h2 class="text-5xl font-serif font-bold mb-8 leading-tight">PQ/CMC Deep Dive:<br/><span class="text-blue-primary italic">The Art of the Perfect Pop</span></h2>
+          <p class="text-2xl leading-relaxed text-text-muted mb-8">Pharmaceutical Quality / Chemistry, Manufacturing & Controls (PQ/CMC) is the secret to the perfect pop. It is the proof that every kernel is consistently pure, potent, and stable from the first batch to the millionth.</p>
           <div class="flex flex-wrap gap-4">
             <div class="px-6 py-3 bg-blue-primary/10 rounded-2xl border border-blue-primary/20 flex items-center gap-3">
               <span class="text-blue-primary font-bold">CORE GUIDELINE:</span>
@@ -834,7 +834,7 @@ export const KERNEL_VAULT: VaultItem[] = [
     id: "standards-universe",
     title: "The Standards Universe",
     category: "Standards",
-    description: "Every drug development activity operates inside a dense web of mandatory and voluntary standards. GxP, ICH, ISO, and digital protocols interlock here.",
+    description: "Every drug development activity operates inside a dense web of mandatory and voluntary standards. Think of it as the 'pop' in the popcorn process.",
     difficulty: "Fully Popped",
     readTime: "20 min",
     publishedAt: "2024-01-05",
@@ -844,7 +844,7 @@ export const KERNEL_VAULT: VaultItem[] = [
         <div class="mb-16 p-12 rounded-[3rem] bg-gradient-to-br from-amber-primary/20 via-amber-primary/5 to-transparent border border-amber-primary/30 relative overflow-hidden shadow-2xl shadow-amber-primary/5">
           <div class="absolute -top-10 -right-10 p-8 opacity-10 text-[12rem] font-serif rotate-12 text-amber-primary">S</div>
           <h2 class="text-5xl font-serif font-bold mb-8 text-amber-primary italic leading-tight">The Standards Universe:<br/><span class="text-text-main not-italic">The Rules of the Game</span></h2>
-          <p class="text-2xl leading-relaxed text-text-muted mb-8">Every drug development activity operates inside a dense web of mandatory and voluntary standards. These standards ensure that every "pop" is safe, consistent, and documented.</p>
+          <p class="text-2xl leading-relaxed text-text-muted mb-8">Every drug development activity operates inside a dense web of mandatory and voluntary standards. These standards ensure that every product is safe, consistent, and documented.</p>
           <div class="flex flex-wrap gap-4">
             <div class="px-6 py-3 bg-amber-primary/10 rounded-2xl border border-amber-primary/20 flex items-center gap-3">
               <span class="text-amber-primary font-bold">CORE:</span>
@@ -958,23 +958,23 @@ export const KERNEL_VAULT: VaultItem[] = [
     id: "isa-88-95",
     title: "ISA 88 & ISA 95 — The Pharma Playbook",
     category: "Standards",
-    description: "ISA 88 & ISA 95 are the invisible rulebooks that make medicine safe, consistent, and scalable. Learn how they bridge the gap between business and the factory floor.",
+    description: "ISA 88 & ISA 95 are the foundational standards that ensure pharmaceutical manufacturing is safe, consistent, and scalable. Think of them as the rules for popping the perfect kernel.",
     difficulty: "Kernel",
-    readTime: "12 min",
+    readTime: "15 min",
     publishedAt: "2024-01-06",
     content: `
       <div class="prose prose-invert max-w-none">
         <!-- Hero Section -->
         <div class="mb-16 p-12 rounded-[3rem] bg-gradient-to-br from-amber-primary/20 via-amber-primary/5 to-transparent border border-amber-primary/30 relative overflow-hidden shadow-2xl shadow-amber-primary/5 text-center">
-          <div class="absolute -top-10 -right-10 p-8 opacity-10 text-[12rem] rotate-12">🍿</div>
-          <span class="inline-block px-4 py-1 rounded-full bg-amber-primary/10 border border-amber-primary/20 text-amber-primary text-xs font-bold uppercase tracking-widest mb-6">Pharma Explainer Series</span>
-          <h2 class="text-5xl font-serif font-bold mb-8 leading-tight">ISA 88 & ISA 95:<br/><span class="text-amber-primary italic">The Pharma Playbook</span></h2>
-          <p class="text-2xl leading-relaxed text-text-muted mb-8 max-w-3xl mx-auto">ISA 88 & ISA 95 sound like robot serial numbers — but they're actually the invisible rulebooks that make medicine safe, consistent, and scalable. Let's decode them with popcorn.</p>
+          <div class="absolute -top-10 -right-10 p-8 opacity-10 text-[12rem] rotate-12">⚙️</div>
+          <span class="inline-block px-4 py-1 rounded-full bg-amber-primary/10 border border-amber-primary/20 text-amber-primary text-xs font-bold uppercase tracking-widest mb-6">Pharma Standards Series</span>
+          <h2 class="text-5xl font-serif font-bold mb-8 leading-tight">ISA 88 & ISA 95:<br/><span class="text-amber-primary italic">The Rules for Popping the Perfect Kernel</span></h2>
+          <p class="text-2xl leading-relaxed text-text-muted mb-8 max-w-3xl mx-auto">ISA 88 and ISA 95 are the invisible rules that ensure every kernel pops exactly the same way, every time, ensuring every dose is safe and consistent.</p>
         </div>
 
         <!-- Intro -->
         <div class="my-24 max-w-3xl mx-auto text-center">
-          <p class="text-xl leading-relaxed text-text-muted mb-8">Imagine you run a popcorn company. Your <strong>popcorn kernels</strong> are the active ingredient (API). Your finished <strong>bag of popcorn</strong> is the drug product. Now imagine making a million bags a day, in six factories around the world. How do you make sure every bag is identical?</p>
+          <p class="text-xl leading-relaxed text-text-muted mb-8">In pharmaceutical manufacturing, consistency is paramount. Whether producing a small batch for a clinical trial or millions of units for global distribution, the process must remain identical. ISA 88 and ISA 95 provide the structural integrity required to achieve this level of precision.</p>
           <div class="w-24 h-1 bg-amber-primary/30 mx-auto rounded-full"></div>
         </div>
 
@@ -1064,21 +1064,21 @@ export const KERNEL_VAULT: VaultItem[] = [
                 <div class="w-10 h-10 rounded-full bg-blue-primary flex items-center justify-center text-white font-bold text-xs">E</div>
                 <div class="flex-1">
                   <div class="font-bold">Enterprise / Site</div>
-                  <div class="text-xs text-text-muted italic">Whole popcorn company</div>
+                  <div class="text-xs text-text-muted italic">Global manufacturing network</div>
                 </div>
               </div>
               <div class="flex items-center gap-4 p-4 bg-blue-primary/10 rounded-2xl border border-blue-primary/20 ml-8">
                 <div class="w-10 h-10 rounded-full bg-blue-primary flex items-center justify-center text-white font-bold text-xs">A</div>
                 <div class="flex-1">
                   <div class="font-bold">Process Cell</div>
-                  <div class="text-xs text-text-muted italic">Popcorn production hall</div>
+                  <div class="text-xs text-text-muted italic">Specific production facility or suite</div>
                 </div>
               </div>
               <div class="flex items-center gap-4 p-4 bg-blue-primary/10 rounded-2xl border border-blue-primary/20 ml-16">
                 <div class="w-10 h-10 rounded-full bg-blue-primary flex items-center justify-center text-white font-bold text-xs">B</div>
                 <div class="flex-1">
                   <div class="font-bold">Unit</div>
-                  <div class="text-xs text-text-muted italic">One popping machine</div>
+                  <div class="text-xs text-text-muted italic">Individual production machine (e.g., bioreactor)</div>
                 </div>
               </div>
               <div class="flex items-center gap-4 p-4 bg-blue-primary/10 rounded-2xl border border-blue-primary/20 ml-24">
@@ -1170,12 +1170,12 @@ export const KERNEL_VAULT: VaultItem[] = [
                   <td class="p-6 text-text-muted">Information flows & interfaces</td>
                 </tr>
                 <tr class="border-b border-border/50 hover:bg-surface/50 transition-colors">
-                  <td class="p-6 font-bold">Popcorn Analogy</td>
-                  <td class="p-6 text-text-muted">The recipe card for one batch</td>
-                  <td class="p-6 text-text-muted">The order system for the whole factory</td>
+                  <td class="p-6 font-bold">Manufacturing Context</td>
+                  <td class="p-6 text-text-muted">The procedural execution of a batch</td>
+                  <td class="p-6 text-text-muted">The operational management of the facility</td>
                 </tr>
                 <tr class="bg-amber-primary/5">
-                  <td class="p-6 font-bold italic" colspan="3">ISA 88 tells you how to cook. ISA 95 tells you why, how much, and when.</td>
+                  <td class="p-6 font-bold italic" colspan="3">ISA 88 tells you how to pop. ISA 95 tells you why, how many kernels, and when.</td>
                 </tr>
               </tbody>
             </table>

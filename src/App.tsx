@@ -17,19 +17,10 @@ import {
   ThumbsUp,
   Clock,
   Tag,
-  ArrowLeft,
-  Lock,
-  LayoutDashboard,
-  FileText,
-  Video,
-  BarChart3,
-  Plus,
-  Eye,
-  EyeOff,
-  Save,
-  LogOut
+  ArrowLeft
 } from 'lucide-react';
 import { Section, VaultItem, VideoInfo, GuestbookEntry, TopicSuggestion, Difficulty } from './types';
+import { POP_EXPLAINERS, KERNEL_VAULT } from './constants';
 import ThemeToggle from './components/ThemeToggle';
 import ScrollToTop from './components/ScrollToTop';
 import Carousel from './components/Carousel';
@@ -40,24 +31,6 @@ export default function App() {
   const [selectedKernel, setSelectedKernel] = useState<VaultItem | null>(null);
   const [selectedLab, setSelectedLab] = useState<VideoInfo | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [guides, setGuides] = useState<VaultItem[]>([]);
-  const [videos, setVideos] = useState<VideoInfo[]>([]);
-
-  useEffect(() => {
-    fetch('/api/auth/me').then(res => res.json()).then(data => setUser(data.user));
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    const [gRes, vRes] = await Promise.all([
-      fetch('/api/guides'),
-      fetch('/api/videos')
-    ]);
-    const [gData, vData] = await Promise.all([gRes.json(), vRes.json()]);
-    setGuides(gData);
-    setVideos(vData);
-  };
 
   const navLinks = [
     { id: 'vault', label: 'Kernel Vault', icon: BookOpen },
@@ -75,16 +48,6 @@ export default function App() {
     setActiveSection(section);
     window.scrollTo(0, 0);
   };
-
-  useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      if (event.data?.type === 'OAUTH_AUTH_SUCCESS') {
-        fetch('/api/auth/me').then(res => res.json()).then(data => setUser(data.user));
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
 
   return (
     <div className="min-h-screen bg-bg text-text-main selection:bg-amber-primary/30">
@@ -118,27 +81,6 @@ export default function App() {
                 {link.label}
               </button>
             ))}
-            {user ? (
-              <button 
-                onClick={() => handleNavigate('admin' as Section)}
-                className={`flex items-center gap-2 text-sm font-medium tracking-wide uppercase transition-colors hover:text-amber-primary ${
-                  activeSection === 'admin' ? 'text-amber-primary' : 'text-text-muted'
-                }`}
-              >
-                <Lock size={14} /> Admin
-              </button>
-            ) : (
-              <button 
-                onClick={async () => {
-                  const res = await fetch('/api/auth/google/url');
-                  const { url } = await res.json();
-                  window.open(url, 'oauth_popup', 'width=600,height=700');
-                }}
-                className="text-sm font-medium tracking-wide uppercase text-text-muted hover:text-amber-primary"
-              >
-                Login
-              </button>
-            )}
             <ThemeToggle />
           </div>
 
@@ -178,18 +120,6 @@ export default function App() {
                   {link.label}
                 </button>
               ))}
-              {user && (
-                <button
-                  onClick={() => {
-                    handleNavigate('admin' as Section);
-                    setIsMenuOpen(false);
-                  }}
-                  className="flex items-center gap-4 text-2xl font-serif"
-                >
-                  <Lock className="text-amber-primary" />
-                  Admin
-                </button>
-              )}
             </div>
           </motion.div>
         )}
@@ -197,19 +127,18 @@ export default function App() {
 
       <main className="pt-20">
         <AnimatePresence mode="wait">
-          {activeSection === 'home' && <Home onNavigate={handleNavigate} guides={guides} videos={videos} />}
-          {activeSection === 'vault' && <Vault onNavigate={handleNavigate} guides={guides} />}
-          {activeSection === 'lab' && <Lab onNavigate={handleNavigate} videos={videos} />}
+          {activeSection === 'home' && <Home onNavigate={handleNavigate} />}
+          {activeSection === 'vault' && <Vault onNavigate={handleNavigate} />}
+          {activeSection === 'lab' && <Lab onNavigate={handleNavigate} />}
           {activeSection === 'community' && <Community onNavigate={handleNavigate} />}
           {activeSection === 'community-topics' && <CommunityTopics onBack={() => handleNavigate('community')} />}
           {activeSection === 'community-guestbook' && <CommunityGuestbook onBack={() => handleNavigate('community')} />}
           {activeSection === 'about' && <About />}
-          {activeSection === 'admin' && user && <AdminPanel user={user} onLogout={() => setUser(null)} />}
           {activeSection === 'kernel-detail' && selectedKernel && (
             <KernelDetail item={selectedKernel} onBack={() => handleNavigate('vault')} />
           )}
           {activeSection === 'lab-detail' && selectedLab && (
-            <LabDetail video={selectedLab} onBack={() => handleNavigate('lab')} onNavigate={handleNavigate} guides={guides} />
+            <LabDetail video={selectedLab} onBack={() => handleNavigate('lab')} onNavigate={handleNavigate} />
           )}
         </AnimatePresence>
       </main>
@@ -247,9 +176,9 @@ function DifficultyBadge({ level }: { level: Difficulty }) {
   );
 }
 
-function Home({ onNavigate, guides, videos }: { onNavigate: (s: Section, data?: any) => void, guides: VaultItem[], videos: VideoInfo[] }) {
-  const recentKernels = useMemo(() => [...guides].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 6), [guides]);
-  const recentVideos = useMemo(() => [...videos].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 6), [videos]);
+function Home({ onNavigate }: { onNavigate: (s: Section, data?: any) => void }) {
+  const recentKernels = useMemo(() => [...KERNEL_VAULT].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 6), []);
+  const recentVideos = useMemo(() => [...POP_EXPLAINERS].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 6), []);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
@@ -294,7 +223,7 @@ function Home({ onNavigate, guides, videos }: { onNavigate: (s: Section, data?: 
               >
                 🍿
               </motion.div>
-              <div className="font-serif text-3xl italic text-amber-primary tracking-tight">The Expansion Philosophy</div>
+              <div className="font-serif text-3xl italic text-amber-primary tracking-tight">The Popcorn Analogy</div>
             </div>
             
             {/* Floating Status Card */}
@@ -322,13 +251,13 @@ function Home({ onNavigate, guides, videos }: { onNavigate: (s: Section, data?: 
               The <span className="text-amber-primary italic">Popcorn</span> Analogy
             </h2>
             <p className="text-text-muted text-xl leading-relaxed mb-10">
-              Every complex idea in pharmaceutical science begins as a kernel — a core foundational concept. Under the right conditions (context, logic, and clarity), that kernel expands into full understanding.
+              Every complex idea in pharmaceutical science begins as a kernel — a core foundational concept. Through the right environment and context, that kernel pops into a complete understanding of the drug lifecycle.
             </p>
             <ul className="space-y-8">
               {[
-                { title: "The Kernel", desc: "The drug substance or core molecule.", icon: "🌽" },
-                { title: "The Heat", desc: "The regulatory and scientific context.", icon: "🔥" },
-                { title: "The Pop", desc: "The moment science becomes clear.", icon: "✨" }
+                { title: "The Kernel", desc: "The drug substance or core molecular target.", icon: "🍿" },
+                { title: "The Context", desc: "The regulatory and scientific framework.", icon: "📋" },
+                { title: "The Pop", desc: "The moment science becomes actionable knowledge.", icon: "✨" }
               ].map((item, i) => (
                 <li key={i} className="flex gap-6 group">
                   <div className="w-14 h-14 rounded-2xl bg-surface-hover flex items-center justify-center text-2xl shrink-0 border border-border group-hover:border-amber-primary/30 transition-all shadow-sm">
@@ -355,6 +284,7 @@ function Home({ onNavigate, guides, videos }: { onNavigate: (s: Section, data?: 
         </div>
         <Carousel 
           items={recentKernels}
+          activeColor="bg-amber-primary"
           renderItem={(item: VaultItem) => (
             <div 
               onClick={() => onNavigate('kernel-detail', item)}
@@ -389,6 +319,7 @@ function Home({ onNavigate, guides, videos }: { onNavigate: (s: Section, data?: 
         </div>
         <Carousel 
           items={recentVideos}
+          activeColor="bg-blue-primary"
           renderItem={(video: VideoInfo) => (
             <div 
               onClick={() => onNavigate('lab-detail', video)}
@@ -430,8 +361,8 @@ function GuestbookSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
   return (
     <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border">
       <div className="text-center mb-16">
-        <h2 className="font-serif text-4xl font-bold mb-4">Guestbook</h2>
-        <p className="text-text-muted text-lg">See what the community is saying about the kernel.</p>
+        <h2 className="font-serif text-4xl font-bold mb-4">Join the Conversation</h2>
+        <p className="text-text-muted text-lg">See what the community is reflecting on.</p>
       </div>
       
       <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -452,23 +383,23 @@ function GuestbookSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
 
       <div className="text-center">
         <button 
-          onClick={() => onNavigate('community')}
-          className="px-8 py-4 bg-surface border border-border text-text-main font-bold rounded-lg hover:bg-surface-hover transition-all"
+          onClick={() => onNavigate('community-guestbook')}
+          className="text-amber-primary font-bold text-xl flex items-center gap-2 mx-auto hover:gap-3 transition-all group"
         >
-          Sign the Guestbook
+          Add your voice <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </section>
   );
 }
 
-function Vault({ onNavigate, guides }: { onNavigate: (s: Section, data?: any) => void, guides: VaultItem[] }) {
+function Vault({ onNavigate }: { onNavigate: (s: Section, data?: any) => void }) {
   const [search, setSearch] = useState('');
   const [activeTag, setActiveTag] = useState('All');
 
-  const tags = ['All', ...new Set(guides.map(k => k.category))];
+  const tags = ['All', ...new Set(KERNEL_VAULT.map(k => k.category))];
 
-  const filtered = guides.filter(k => {
+  const filtered = KERNEL_VAULT.filter(k => {
     const matchesSearch = k.title.toLowerCase().includes(search.toLowerCase()) || k.description.toLowerCase().includes(search.toLowerCase());
     const matchesTag = activeTag === 'All' || k.category === activeTag;
     return matchesSearch && matchesTag;
@@ -533,13 +464,13 @@ function Vault({ onNavigate, guides }: { onNavigate: (s: Section, data?: any) =>
   );
 }
 
-function Lab({ onNavigate, videos }: { onNavigate: (s: Section, data?: any) => void, videos: VideoInfo[] }) {
+function Lab({ onNavigate }: { onNavigate: (s: Section, data?: any) => void }) {
   const [search, setSearch] = useState('');
   const [activeTag, setActiveTag] = useState('All');
 
-  const tags = ['All', ...new Set(videos.map(v => v.category))];
+  const tags = ['All', ...new Set(POP_EXPLAINERS.map(v => v.category))];
 
-  const filtered = videos.filter(v => {
+  const filtered = POP_EXPLAINERS.filter(v => {
     const matchesSearch = v.title.toLowerCase().includes(search.toLowerCase()) || v.description.toLowerCase().includes(search.toLowerCase());
     const matchesTag = activeTag === 'All' || v.category === activeTag;
     return matchesSearch && matchesTag;
@@ -549,7 +480,7 @@ function Lab({ onNavigate, videos }: { onNavigate: (s: Section, data?: any) => v
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-7xl mx-auto px-6 py-12">
       <div className="mb-16">
         <h1 className="font-serif text-5xl font-bold mb-4">Pop Lab</h1>
-        <p className="text-text-muted text-xl max-w-2xl">Bite-sized video explainers on pharmaceutical science - Sit back. Press play. Watch science pop.</p>
+        <p className="text-text-muted text-xl max-w-2xl">Bite-sized video explainers on pharmaceutical science - Sit back. Press play. Watch science expand.</p>
       </div>
 
       <div className="flex flex-col md:flex-row gap-6 mb-12">
@@ -632,8 +563,8 @@ function KernelDetail({ item, onBack }: { item: VaultItem, onBack: () => void })
   );
 }
 
-function LabDetail({ video, onBack, onNavigate, guides }: { video: VideoInfo, onBack: () => void, onNavigate: (s: Section, data?: any) => void, guides: VaultItem[] }) {
-  const relatedKernel = guides.find(k => k.category === video.category);
+function LabDetail({ video, onBack, onNavigate }: { video: VideoInfo, onBack: () => void, onNavigate: (s: Section, data?: any) => void }) {
+  const relatedKernel = KERNEL_VAULT.find(k => k.category === video.category);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-5xl mx-auto px-6 py-12">
@@ -690,7 +621,7 @@ function Community({ onNavigate }: { onNavigate: (s: Section) => void }) {
       <div className="mb-24 text-center">
         <h1 className="font-serif text-6xl font-bold mb-6">Community</h1>
         <p className="text-text-muted text-xl max-w-2xl mx-auto font-light">
-          A space to shape ideas and reflect on what resonates.
+          A space to shape ideas and reflect on what popped for you.
         </p>
       </div>
 
@@ -717,10 +648,10 @@ function Community({ onNavigate }: { onNavigate: (s: Section) => void }) {
         >
           <h2 className="text-3xl font-bold mb-4">Join the Conversation</h2>
           <p className="text-text-muted text-lg mb-8 leading-relaxed">
-            If something clicked, share what popped for you and add your voice to the wall.
+            If something popped for you, share it and add your voice to the wall.
           </p>
-          <div className="text-blue-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
-            Sign the Guestbook <ArrowRight size={20} />
+          <div className="text-amber-primary font-bold text-lg flex items-center gap-2 group-hover:gap-4 transition-all">
+            Add your voice <ArrowRight size={20} />
           </div>
         </motion.div>
       </div>
@@ -939,7 +870,7 @@ function CommunityGuestbook({ onBack }: { onBack: () => void }) {
       <div className="text-center mb-20">
         <h2 className="font-serif text-5xl font-bold mb-6">Join the Conversation</h2>
         <p className="text-text-muted text-xl max-w-2xl mx-auto font-light">
-          If something clicked, we’d love to hear what popped for you.
+          If something popped for you, we’d love to hear it.
         </p>
       </div>
 
@@ -983,7 +914,7 @@ function CommunityGuestbook({ onBack }: { onBack: () => void }) {
             </div>
             <div className="flex items-center justify-between gap-4">
               <button type="submit" className="px-10 py-5 bg-blue-primary text-white font-bold rounded-2xl hover:bg-blue-600 transition-all shadow-lg shadow-blue-primary/10">
-                Sign the Guestbook
+                Share your reflection
               </button>
               <AnimatePresence>
                 {guestbookSubmitted && (
@@ -993,7 +924,7 @@ function CommunityGuestbook({ onBack }: { onBack: () => void }) {
                     exit={{ opacity: 0 }}
                     className="text-blue-primary font-medium"
                   >
-                    Thank you for sharing your voice.
+                    Thank you for sharing what popped for you.
                   </motion.p>
                 )}
               </AnimatePresence>
@@ -1026,7 +957,7 @@ function CommunityGuestbook({ onBack }: { onBack: () => void }) {
         ))}
         {entries.length === 0 && (
           <div className="col-span-full text-center py-32 bg-surface border border-border border-dashed rounded-3xl">
-            <p className="text-text-muted text-lg mb-2">The first message sets the tone.</p>
+            <p className="text-text-muted text-lg mb-2">The first kernel sets the tone.</p>
             <p className="font-bold text-text-main">Be the first to share what popped for you.</p>
           </div>
         )}
@@ -1035,414 +966,167 @@ function CommunityGuestbook({ onBack }: { onBack: () => void }) {
   );
 }
 
-function AdminPanel({ user, onLogout }: { user: any, onLogout: () => void }) {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'guides' | 'videos'>('dashboard');
-  const [metrics, setMetrics] = useState<any>(null);
-  const [guides, setGuides] = useState<VaultItem[]>([]);
-  const [videos, setVideos] = useState<VideoInfo[]>([]);
-  const [editingItem, setEditingItem] = useState<any>(null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  useEffect(() => {
-    fetchMetrics();
-    fetchAdminData();
-  }, []);
-
-  const fetchMetrics = async () => {
-    const res = await fetch('/api/admin/metrics');
-    if (res.ok) setMetrics(await res.json());
-  };
-
-  const fetchAdminData = async () => {
-    const [gRes, vRes] = await Promise.all([
-      fetch('/api/admin/guides'),
-      fetch('/api/admin/videos')
-    ]);
-    if (gRes.ok) setGuides(await gRes.json());
-    if (vRes.ok) setVideos(await vRes.json());
-  };
-
-  const handleSaveGuide = async (guide: any) => {
-    setIsSaving(true);
-    const res = await fetch('/api/admin/guides', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(guide)
-    });
-    if (res.ok) {
-      setEditingItem(null);
-      fetchAdminData();
-    }
-    setIsSaving(false);
-  };
-
-  const handleSaveVideo = async (video: any) => {
-    setIsSaving(true);
-    const res = await fetch('/api/admin/videos', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(video)
-    });
-    if (res.ok) {
-      setEditingItem(null);
-      fetchAdminData();
-    }
-    setIsSaving(false);
-  };
-
-  const togglePublishGuide = async (id: string, current: boolean) => {
-    const res = await fetch(`/api/admin/guides/${id}/publish`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ is_published: !current })
-    });
-    if (res.ok) fetchAdminData();
-  };
-
-  const togglePublishVideo = async (id: string, current: boolean) => {
-    const res = await fetch(`/api/admin/videos/${id}/publish`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ is_published: !current })
-    });
-    if (res.ok) fetchAdminData();
-  };
-
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    onLogout();
-  };
-
-  return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
-      <div className="flex items-center justify-between mb-12">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full border-2 border-amber-primary p-1">
-            <img src={user.picture} alt={user.name} className="w-full h-full rounded-full object-cover" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-serif font-bold italic">Admin Dashboard</h1>
-            <p className="text-text-muted">Welcome back, {user.name}</p>
-          </div>
-        </div>
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-2 px-6 py-3 bg-surface border border-border rounded-xl hover:border-red-500/30 transition-colors text-text-muted hover:text-red-500"
-        >
-          <LogOut size={18} /> Logout
-        </button>
-      </div>
-
-      <div className="flex gap-4 mb-8 border-b border-border pb-4 overflow-x-auto">
-        {[
-          { id: 'dashboard', label: 'Overview', icon: LayoutDashboard },
-          { id: 'guides', label: 'Kernel Vault', icon: FileText },
-          { id: 'videos', label: 'Pop Lab', icon: Video },
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all ${
-              activeTab === tab.id 
-                ? 'bg-amber-primary text-bg font-bold shadow-lg shadow-amber-primary/20' 
-                : 'text-text-muted hover:bg-surface'
-            }`}
-          >
-            <tab.icon size={18} /> {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === 'dashboard' && metrics && (
-        <div className="grid md:grid-cols-4 gap-6 mb-12">
-          <div className="p-8 bg-surface border border-border rounded-3xl">
-            <div className="text-text-muted text-sm uppercase tracking-widest mb-2">Total Visits</div>
-            <div className="text-4xl font-serif font-bold text-amber-primary">{metrics.totalVisits}</div>
-          </div>
-          <div className="p-8 bg-surface border border-border rounded-3xl">
-            <div className="text-text-muted text-sm uppercase tracking-widest mb-2">Unique Visitors</div>
-            <div className="text-4xl font-serif font-bold text-amber-primary">{metrics.uniqueVisitors}</div>
-          </div>
-          <div className="p-8 bg-surface border border-border rounded-3xl">
-            <div className="text-text-muted text-sm uppercase tracking-widest mb-2">Topic Votes</div>
-            <div className="text-4xl font-serif font-bold text-amber-primary">{metrics.totalVotes}</div>
-          </div>
-          <div className="p-8 bg-surface border border-border rounded-3xl">
-            <div className="text-text-muted text-sm uppercase tracking-widest mb-2">Guestbook Entries</div>
-            <div className="text-4xl font-serif font-bold text-amber-primary">{metrics.totalGuestbook}</div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'guides' && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Manage Guides</h2>
-            <button 
-              onClick={() => setEditingItem({ type: 'guide', id: `guide-${Date.now()}`, title: '', category: 'Drug Development', description: '', difficulty: 'Kernel', readTime: '10 min', publishedAt: new Date().toISOString().split('T')[0], content: '', is_published: 1 })}
-              className="flex items-center gap-2 px-6 py-3 bg-amber-primary text-bg font-bold rounded-xl hover:scale-105 transition-transform"
-            >
-              <Plus size={18} /> New Guide
-            </button>
-          </div>
-          <div className="grid gap-4">
-            {guides.map(guide => (
-              <div key={guide.id} className="p-6 bg-surface border border-border rounded-2xl flex items-center justify-between group hover:border-amber-primary/30 transition-all">
-                <div className="flex items-center gap-6">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${guide.is_published ? 'bg-amber-primary/10 text-amber-primary' : 'bg-text-muted/10 text-text-muted'}`}>
-                    {guide.is_published ? <Eye size={20} /> : <EyeOff size={20} />}
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">{guide.title}</h3>
-                    <p className="text-sm text-text-muted">{guide.category} • {guide.readTime}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button 
-                    onClick={() => togglePublishGuide(guide.id, !!guide.is_published)}
-                    className="p-3 bg-bg border border-border rounded-xl hover:border-amber-primary/30 transition-colors"
-                    title={guide.is_published ? 'Unpublish' : 'Publish'}
-                  >
-                    {guide.is_published ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                  <button 
-                    onClick={() => setEditingItem({ ...guide, type: 'guide' })}
-                    className="px-6 py-3 bg-bg border border-border rounded-xl hover:border-amber-primary/30 transition-colors font-bold"
-                  >
-                    Edit
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'videos' && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-bold">Manage Videos</h2>
-            <button 
-              onClick={() => setEditingItem({ type: 'video', id: `video-${Date.now()}`, title: '', url: '', thumbnail: '', description: '', category: 'Drug Development', publishedAt: new Date().toISOString().split('T')[0], is_published: 1 })}
-              className="flex items-center gap-2 px-6 py-3 bg-amber-primary text-bg font-bold rounded-xl hover:scale-105 transition-transform"
-            >
-              <Plus size={18} /> New Video
-            </button>
-          </div>
-          <div className="grid gap-4">
-            {videos.map(video => (
-              <div key={video.id} className="p-6 bg-surface border border-border rounded-2xl flex items-center justify-between group hover:border-amber-primary/30 transition-all">
-                <div className="flex items-center gap-6">
-                  <div className="w-24 h-16 rounded-lg overflow-hidden border border-border">
-                    <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg">{video.title}</h3>
-                    <p className="text-sm text-text-muted">{video.category} • {video.publishedAt}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button 
-                    onClick={() => togglePublishVideo(video.id, !!video.is_published)}
-                    className="p-3 bg-bg border border-border rounded-xl hover:border-amber-primary/30 transition-colors"
-                    title={video.is_published ? 'Unpublish' : 'Publish'}
-                  >
-                    {video.is_published ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                  <button 
-                    onClick={() => setEditingItem({ ...video, type: 'video' })}
-                    className="px-6 py-3 bg-bg border border-border rounded-xl hover:border-amber-primary/30 transition-colors font-bold"
-                  >
-                    Edit
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Edit Modal */}
-      <AnimatePresence>
-        {editingItem && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-bg/80 backdrop-blur-sm"
-              onClick={() => setEditingItem(null)}
-            />
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-4xl bg-surface border border-border rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-            >
-              <div className="p-8 border-b border-border flex items-center justify-between bg-bg/50">
-                <h2 className="text-2xl font-serif font-bold italic">
-                  {editingItem.type === 'guide' ? 'Edit Kernel Guide' : 'Edit Pop Lab Video'}
-                </h2>
-                <button onClick={() => setEditingItem(null)} className="p-2 hover:bg-bg rounded-lg transition-colors">
-                  <X />
-                </button>
-              </div>
-
-              <div className="p-8 overflow-y-auto space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Title</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.title}
-                      onChange={e => setEditingItem({ ...editingItem, title: e.target.value })}
-                      className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Category</label>
-                    <input 
-                      type="text" 
-                      value={editingItem.category}
-                      onChange={e => setEditingItem({ ...editingItem, category: e.target.value })}
-                      className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {editingItem.type === 'video' ? (
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-text-muted">YouTube URL</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.url}
-                        onChange={e => setEditingItem({ ...editingItem, url: e.target.value })}
-                        className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Thumbnail URL</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.thumbnail}
-                        onChange={e => setEditingItem({ ...editingItem, thumbnail: e.target.value })}
-                        className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid md:grid-cols-3 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Difficulty</label>
-                      <select 
-                        value={editingItem.difficulty}
-                        onChange={e => setEditingItem({ ...editingItem, difficulty: e.target.value })}
-                        className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                      >
-                        <option>Sprout</option>
-                        <option>Kernel</option>
-                        <option>Fully Popped</option>
-                      </select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Read Time</label>
-                      <input 
-                        type="text" 
-                        value={editingItem.readTime}
-                        onChange={e => setEditingItem({ ...editingItem, readTime: e.target.value })}
-                        className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Published Date</label>
-                      <input 
-                        type="date" 
-                        value={editingItem.publishedAt}
-                        onChange={e => setEditingItem({ ...editingItem, publishedAt: e.target.value })}
-                        className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="space-y-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Description</label>
-                  <textarea 
-                    value={editingItem.description}
-                    onChange={e => setEditingItem({ ...editingItem, description: e.target.value })}
-                    className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors h-24 resize-none"
-                  />
-                </div>
-
-                {editingItem.type === 'guide' && (
-                  <div className="space-y-2">
-                    <label className="text-xs font-bold uppercase tracking-widest text-text-muted">Content (HTML)</label>
-                    <textarea 
-                      value={editingItem.content}
-                      onChange={e => setEditingItem({ ...editingItem, content: e.target.value })}
-                      className="w-full px-6 py-4 bg-bg border border-border rounded-2xl focus:border-amber-primary outline-none transition-colors h-64 font-mono text-sm"
-                    />
-                  </div>
-                )}
-              </div>
-
-              <div className="p-8 border-t border-border bg-bg/50 flex justify-end gap-4">
-                <button 
-                  onClick={() => setEditingItem(null)}
-                  className="px-8 py-4 bg-surface border border-border rounded-2xl font-bold hover:bg-bg transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  onClick={() => editingItem.type === 'guide' ? handleSaveGuide(editingItem) : handleSaveVideo(editingItem)}
-                  disabled={isSaving}
-                  className="px-8 py-4 bg-amber-primary text-bg font-bold rounded-2xl shadow-xl shadow-amber-primary/20 hover:scale-105 transition-transform flex items-center gap-2 disabled:opacity-50"
-                >
-                  <Save size={18} /> {isSaving ? 'Saving...' : 'Save Changes'}
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
 function About() {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-4xl mx-auto px-6 py-12">
-      <h1 className="font-serif text-5xl font-bold mb-12">About</h1>
-      <div className="prose prose-invert max-w-none">
-        <p className="text-xl text-text-muted leading-relaxed mb-8">
-          The Scientific Kernel was born from a simple observation: the pharmaceutical industry is one of the most complex in the world, yet the logic that holds it together is rarely explained simply.
-        </p>
-        <p className="text-text-muted mb-8">
-          We believe that knowledge should be accessible, not gatekept. By using the popcorn analogy, we reveal the hidden structures of drug development, CMC, and regulatory systems.
-        </p>
-        
-        <div className="grid md:grid-cols-2 gap-12 my-16">
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+      {/* Hero / Intro Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <div className="max-w-3xl">
+          <h1 className="font-serif text-5xl md:text-6xl font-bold mb-8">
+            Demystifying the <span className="italic text-amber-primary">Life Sciences</span> Journey
+          </h1>
+          <p className="text-xl text-text-muted leading-relaxed">
+            Modern drug development is a complex "language" of acronyms and intricate frameworks. The Scientific Kernel is a platform that makes this logic visible by starting with core principles—the "kernels"—and expanding them into clear, navigable knowledge.
+          </p>
+        </div>
+      </section>
+
+      {/* Mission Statement Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-2xl font-bold mb-6">The Expansion Philosophy</h2>
-            <p>Every complex idea becomes easier to understand when you begin with its core — the kernel. When that foundation is clear, the rest unfolds naturally.</p>
-            <p>The metaphor stuck. Not because it simplifies the science, but because it reveals its structure.</p>
+            <h2 className="font-serif text-4xl font-bold mb-8">Our Mission</h2>
+            <p className="text-text-muted text-lg leading-relaxed mb-6">
+              The Scientific Kernel was born from a simple observation: the pharmaceutical industry is one of the most complex in the world, yet the logic that holds it together is rarely explained simply.
+            </p>
+            <p className="text-text-muted text-lg leading-relaxed">
+              We believe that knowledge should be accessible, not gatekept. By using clear, structured frameworks, we reveal the hidden structures of drug development, CMC, and regulatory systems.
+            </p>
           </div>
-          <div className="p-8 rounded-2xl bg-amber-primary/5 border border-amber-primary/20">
-            <h3 className="font-serif text-xl font-bold text-amber-primary mb-4 italic">Our Mission</h3>
-            <p className="text-text-main italic">"To turn complexity into clarity across the Life Sciences industry, one kernel at a time."</p>
+          <div className="relative p-12 flex items-center justify-center">
+            <div className="absolute inset-0 bg-radial-gradient from-amber-primary/10 to-transparent blur-3xl -z-10"></div>
+            <div className="absolute top-0 right-0 text-[12rem] text-amber-primary/10 font-serif leading-none select-none">”</div>
+            <blockquote className="relative z-10 text-center">
+              <p className="font-serif text-3xl md:text-5xl italic text-text-main leading-tight mb-6">
+                “To turn complexity into clarity across the Life Sciences industry, one kernel at a time.”
+              </p>
+            </blockquote>
           </div>
         </div>
+      </section>
 
-        <h2 className="text-2xl font-bold mb-6">Who It's For</h2>
-        <div className="grid grid-cols-2 gap-4 mb-12">
-          {['Students entering pharma', 'Professionals in transition', 'Scientists broadening scope', 'Digital leaders', 'Regulatory professionals', 'The curious'].map(role => (
-            <div key={role} className="p-4 rounded-xl bg-surface border border-border text-sm font-bold">{role}</div>
+      {/* Methodology Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border">
+        <div className="text-center mb-16">
+          <h2 className="font-serif text-4xl font-bold mb-4">The <span className="italic text-amber-primary">Kernel to Care</span> Methodology</h2>
+          <p className="text-text-muted text-lg max-w-2xl mx-auto">Our structured approach to making complex pharmaceutical concepts accessible.</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            {
+              title: "Start with the Kernel",
+              desc: "Every complex pharmaceutical concept begins with a core, foundational idea. We identify that core before building outward.",
+              icon: "💎"
+            },
+            {
+              title: "Expand with Context",
+              desc: "Core ideas expand into full understanding when provided with heat, logic, and structure. We provide the missing pieces.",
+              icon: "✨"
+            },
+            {
+              title: "Full-Spectrum Coverage",
+              desc: "We explore the entire journey from discovery and CMC to regulatory systems and patient care, showing how it all connects.",
+              icon: "🌈"
+            }
+          ].map((item, i) => (
+            <div key={i} className="p-8 rounded-2xl bg-surface border border-border hover:border-amber-primary/30 transition-all group">
+              <div className="w-12 h-12 rounded-xl bg-bg border border-border flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                {item.icon}
+              </div>
+              <h3 className="text-xl font-bold mb-4">{item.title}</h3>
+              <p className="text-text-muted leading-relaxed text-sm">{item.desc}</p>
+            </div>
           ))}
         </div>
+      </section>
 
-        <p className="text-text-muted pt-12 border-t border-border">
+      {/* Two Ways to Learn Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border">
+        <div className="grid md:grid-cols-2 gap-16">
+          <div className="p-10 rounded-3xl bg-surface border border-border relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-5 text-8xl font-serif group-hover:scale-110 transition-transform">Vault</div>
+            <div className="w-16 h-16 rounded-2xl bg-amber-primary/10 border border-amber-primary/20 flex items-center justify-center text-3xl mb-8">
+              <BookOpen className="text-amber-primary" />
+            </div>
+            <h3 className="text-3xl font-serif font-bold mb-6">The <span className="italic text-amber-primary">Kernel Vault</span></h3>
+            <p className="text-xl font-bold mb-4 text-text-main">Written Depth</p>
+            <p className="text-text-muted leading-relaxed">
+              A library of structured written guides where topics are explored through deep, connected thinking. Perfect for those who want to master the technical details and regulatory nuances.
+            </p>
+          </div>
+          <div className="p-10 rounded-3xl bg-surface border border-border relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-5 text-8xl font-serif group-hover:scale-110 transition-transform">Lab</div>
+            <div className="w-16 h-16 rounded-2xl bg-blue-primary/10 border border-blue-primary/20 flex items-center justify-center text-3xl mb-8">
+              <FlaskConical className="text-blue-primary" />
+            </div>
+            <h3 className="text-3xl font-serif font-bold mb-6">The <span className="italic text-blue-primary">Pop Lab</span></h3>
+            <p className="text-xl font-bold mb-4 text-text-main">Visual Clarity</p>
+            <p className="text-text-muted leading-relaxed">
+              Concise "Pop Explainer" videos designed to help complex ideas land quickly and memorably. Ideal for high-level overviews and visual learners who want to see the science in motion.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Who It’s For Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24 border-t border-border">
+        <div className="mb-16">
+          <h2 className="font-serif text-4xl font-bold mb-4">Who It’s For</h2>
+          <p className="text-xl text-text-muted">Built for ambitious minds shaping the future of pharma.</p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[
+            { 
+              role: 'Students entering pharma', 
+              desc: 'Build foundational understanding from the very first principles of drug development.',
+              icon: '🎓'
+            },
+            { 
+              role: 'Professionals in transition', 
+              desc: 'Navigate new roles with clarity by understanding how systems and disciplines connect.',
+              icon: '🔄'
+            },
+            { 
+              role: 'Scientists broadening scope', 
+              desc: 'Expand beyond your specialism and see the full picture of the life sciences journey.',
+              icon: '🔬'
+            },
+            { 
+              role: 'Digital leaders', 
+              desc: 'Understand the science behind the systems you\'re modernising and transforming.',
+              icon: '💻'
+            },
+            { 
+              role: 'Regulatory professionals', 
+              desc: 'Connect the regulatory logic to the broader drug development context it operates within.',
+              icon: '📋'
+            },
+            { 
+              role: 'The curious', 
+              desc: 'Anyone who wants to understand how medicines truly move from concept to patient.',
+              icon: '🌍'
+            }
+          ].map(item => (
+            <div key={item.role} className="p-8 rounded-2xl bg-surface border border-border hover:border-amber-primary/30 transition-all group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 rounded-xl bg-bg border border-border flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform shadow-sm">
+                  {item.icon}
+                </div>
+                <h3 className="text-lg font-bold mb-3">{item.role}</h3>
+                <p className="text-sm text-text-muted leading-relaxed">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-6 py-12 border-t border-border text-center">
+        <p className="text-text-muted italic">
           Built by someone who works in pharma and believes knowledge should be shared freely.
         </p>
-      </div>
+      </section>
     </motion.div>
   );
 }

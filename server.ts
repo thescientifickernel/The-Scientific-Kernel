@@ -70,15 +70,7 @@ db.exec(`
   );
 `);
 
-// Auth Middleware
-const isAdmin = (req: any, res: any, next: any) => {
-  if (!req.session?.user) return res.status(401).json({ error: 'Unauthorized' });
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
-  if (!adminEmails.includes(req.session.user.email.toLowerCase())) {
-    return res.status(403).json({ error: 'Forbidden' });
-  }
-  next();
-};
+// Auth Middleware (Removed isAdmin)
 
 async function startServer() {
   const app = express();
@@ -214,66 +206,7 @@ async function startServer() {
     }
   });
 
-  // Admin API Routes
-  app.get('/api/admin/guides', isAdmin, (req, res) => {
-    const guides = db.prepare('SELECT * FROM guides').all();
-    res.json(guides);
-  });
-
-  app.post('/api/admin/guides', isAdmin, (req, res) => {
-    const { id, title, category, description, difficulty, readTime, publishedAt, content, is_published } = req.body;
-    const stmt = db.prepare(`
-      INSERT OR REPLACE INTO guides (id, title, category, description, difficulty, readTime, publishedAt, content, is_published)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    stmt.run(id, title, category, description, difficulty, readTime, publishedAt, content, is_published ? 1 : 0);
-    res.json({ success: true });
-  });
-
-  app.patch('/api/admin/guides/:id/publish', isAdmin, (req, res) => {
-    const { id } = req.params;
-    const { is_published } = req.body;
-    db.prepare('UPDATE guides SET is_published = ? WHERE id = ?').run(is_published ? 1 : 0, id);
-    res.json({ success: true });
-  });
-
-  app.get('/api/admin/videos', isAdmin, (req, res) => {
-    const videos = db.prepare('SELECT * FROM videos').all();
-    res.json(videos);
-  });
-
-  app.post('/api/admin/videos', isAdmin, (req, res) => {
-    const { id, title, url, thumbnail, description, category, publishedAt, is_published } = req.body;
-    const stmt = db.prepare(`
-      INSERT OR REPLACE INTO videos (id, title, url, thumbnail, description, category, publishedAt, is_published)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    stmt.run(id, title, url, thumbnail, description, category, publishedAt, is_published ? 1 : 0);
-    res.json({ success: true });
-  });
-
-  app.patch('/api/admin/videos/:id/publish', isAdmin, (req, res) => {
-    const { id } = req.params;
-    const { is_published } = req.body;
-    db.prepare('UPDATE videos SET is_published = ? WHERE id = ?').run(is_published ? 1 : 0, id);
-    res.json({ success: true });
-  });
-
-  app.get('/api/admin/metrics', isAdmin, (req, res) => {
-    const totalVisits = db.prepare('SELECT COUNT(*) as count FROM site_visits').get().count;
-    const uniqueVisitors = db.prepare('SELECT COUNT(DISTINCT ip_address) as count FROM site_visits').get().count;
-    const totalVotes = db.prepare('SELECT SUM(votes) as count FROM topics').get().count || 0;
-    const totalGuestbook = db.prepare('SELECT COUNT(*) as count FROM guestbook').get().count;
-    const visitsByPath = db.prepare('SELECT path, COUNT(*) as count FROM site_visits GROUP BY path ORDER BY count DESC LIMIT 10').all();
-    
-    res.json({
-      totalVisits,
-      uniqueVisitors,
-      totalVotes,
-      totalGuestbook,
-      visitsByPath
-    });
-  });
+  // Admin API Routes (Removed)
 
   // Vite middleware
   if (process.env.NODE_ENV !== 'production') {
@@ -296,7 +229,7 @@ async function startServer() {
       const guides = [
         {
           id: "drug-development",
-          title: "The Popcorn Medicine Factory",
+          title: "The Drug Development Lifecycle",
           category: "Drug Development",
           description: "A detailed journey through the drug development lifecycle.",
           difficulty: "Sprout",
@@ -304,7 +237,7 @@ async function startServer() {
           publishedAt: "2024-01-01",
           content: `
             <div class="prose prose-invert max-w-none">
-              <h2 class="text-4xl font-serif font-bold text-amber-primary mb-8 italic">The Popcorn Medicine Factory</h2>
+              <h2 class="text-4xl font-serif font-bold text-amber-primary mb-8 italic">The Drug Development Lifecycle</h2>
               <p class="text-xl mb-8">Drug development is the most complex manufacturing process on Earth. It is the art and science of transforming a biological hypothesis into a stable, safe, and effective medicine.</p>
               <div class="grid md:grid-cols-2 gap-8 my-12">
                 <div class="p-8 bg-surface border border-border rounded-3xl">
@@ -352,7 +285,7 @@ async function startServer() {
       const videos = [
         {
           id: "NPdbEZ3nFDY",
-          title: "The Popcorn Medicine Factory",
+          title: "The Drug Development Lifecycle",
           url: "https://youtu.be/9Z_BOBK2Ytc",
           thumbnail: "https://img.youtube.com/vi/9Z_BOBK2Ytc/maxresdefault.jpg",
           description: "A high-level overview of the drug development lifecycle.",
@@ -370,7 +303,7 @@ async function startServer() {
         },
         {
           id: "9Z_BOBK2Ytc",
-          title: "ISA 88 and ISA 95 Rules Behind Every Pill",
+          title: "ISA 88 and ISA 95 - Rules Behind Every Pill",
           url: "https://youtu.be/9Z_BOBK2Ytc",
           thumbnail: "https://img.youtube.com/vi/9Z_BOBK2Ytc/maxresdefault.jpg",
           description: "The standards that bridge the gap between business and the factory floor.",

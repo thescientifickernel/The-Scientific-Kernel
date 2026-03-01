@@ -7,9 +7,16 @@ interface CarouselProps<T> {
   renderItem: (item: T) => React.ReactNode;
   autoRotate?: boolean;
   interval?: number;
+  activeColor?: string;
 }
 
-export default function Carousel<T>({ items, renderItem, autoRotate = false, interval = 5000 }: CarouselProps<T>) {
+export default function Carousel<T>({ 
+  items, 
+  renderItem, 
+  autoRotate = false, 
+  interval = 5000,
+  activeColor = 'bg-amber-primary'
+}: CarouselProps<T>) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [visibleItems, setVisibleItems] = useState(3);
@@ -19,8 +26,7 @@ export default function Carousel<T>({ items, renderItem, autoRotate = false, int
     const handleResize = () => {
       if (window.innerWidth < 640) setVisibleItems(1);
       else if (window.innerWidth < 1024) setVisibleItems(2);
-      else if (window.innerWidth < 1280) setVisibleItems(3);
-      else setVisibleItems(6);
+      else setVisibleItems(3);
     };
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -87,17 +93,19 @@ export default function Carousel<T>({ items, renderItem, autoRotate = false, int
       </button>
 
       {/* Dots */}
-      <div className="flex justify-center gap-2 mt-4">
-        {Array.from({ length: maxIndex + 1 }).map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentIndex(i)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              currentIndex === i ? 'bg-amber-primary w-6' : 'bg-border'
-            }`}
-          />
-        ))}
-      </div>
+      {maxIndex > 0 && (
+        <div className="flex justify-center gap-2 mt-4">
+          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`w-2 h-2 rounded-full transition-all ${
+                currentIndex === i ? `${activeColor} w-6` : 'bg-border'
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-export type Section = 'home' | 'vault' | 'lab' | 'community' | 'about' | 'kernel-detail' | 'lab-detail' | 'community-topics' | 'community-guestbook' | 'admin';
+export type Section = 'home' | 'vault' | 'lab' | 'community' | 'about' | 'kernel-detail' | 'lab-detail' | 'community-topics' | 'community-guestbook';
 
 export type Difficulty = 'Sprout' | 'Kernel' | 'Fully Popped';
 
