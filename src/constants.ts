@@ -35,7 +35,8 @@ export const POP_EXPLAINERS: VideoInfo[] = [
     thumbnail: "https://img.youtube.com/vi/Y4m9EMI5xgs/maxresdefault.jpg",
     description: "Good Practice standards (GMP, GCP, GLP) explained.",
     category: "Standards",
-    publishedAt: "2024-01-04"
+    publishedAt: "2024-01-04",
+    excludeKernelIds: ["isa-88-95"]
   },
   {
     id: "QA-c8mrYrrs",
@@ -44,7 +45,8 @@ export const POP_EXPLAINERS: VideoInfo[] = [
     thumbnail: "https://img.youtube.com/vi/QA-c8mrYrrs/maxresdefault.jpg",
     description: "Identification of Medicinal Products standards.",
     category: "Standards",
-    publishedAt: "2024-01-05"
+    publishedAt: "2024-01-05",
+    excludeKernelIds: ["isa-88-95"]
   },
   {
     id: "SsoJdUcJjXw",
@@ -53,7 +55,8 @@ export const POP_EXPLAINERS: VideoInfo[] = [
     thumbnail: "https://img.youtube.com/vi/SsoJdUcJjXw/maxresdefault.jpg",
     description: "Clinical Data Interchange Standards Consortium.",
     category: "Standards",
-    publishedAt: "2024-01-06"
+    publishedAt: "2024-01-06",
+    excludeKernelIds: ["isa-88-95"]
   },
   {
     id: "IRCkizYIB-0",
@@ -62,7 +65,8 @@ export const POP_EXPLAINERS: VideoInfo[] = [
     thumbnail: "https://img.youtube.com/vi/IRCkizYIB-0/maxresdefault.jpg",
     description: "International Council for Harmonisation of Technical Requirements.",
     category: "Standards",
-    publishedAt: "2024-01-07"
+    publishedAt: "2024-01-07",
+    excludeKernelIds: ["isa-88-95"]
   },
   {
     id: "J5WTUAOYkYM",
@@ -106,7 +110,7 @@ export const POP_EXPLAINERS: VideoInfo[] = [
     url: "https://youtu.be/9Z_BOBK2Ytc",
     thumbnail: "https://img.youtube.com/vi/9Z_BOBK2Ytc/maxresdefault.jpg",
     description: "Why do we have so many standards? Exploring the gap between the shop floor and the boardroom.",
-    category: "Alliances",
+    category: "Standards",
     publishedAt: "2024-01-12"
   }
 ];
@@ -114,7 +118,7 @@ export const POP_EXPLAINERS: VideoInfo[] = [
 export const KERNEL_VAULT: VaultItem[] = [
   {
     id: "drug-development",
-    title: "The Drug Development Lifecycle",
+    title: "The Drug Development Lifecycle — Drug Development 101",
     category: "Drug Development",
     description: "A comprehensive guide to the 10–15 year journey of bringing a new medicine to patients, using the popcorn analogy to explain the complex drug development lifecycle.",
     difficulty: "Sprout",
@@ -352,7 +356,7 @@ export const KERNEL_VAULT: VaultItem[] = [
   },
   {
     id: "pq-cmc",
-    title: "PQ/CMC Deep Dive",
+    title: "PQ/CMC Deep Dive — eCTD Unpacked",
     category: "Quality",
     description: "A complete, beginner-friendly guide to Pharmaceutical Quality / Chemistry, Manufacturing & Controls — the domains, the eCTD document structure, and why it's like popping corn.",
     difficulty: "Fully Popped",
@@ -578,7 +582,7 @@ export const KERNEL_VAULT: VaultItem[] = [
   },
   {
     id: "outsourcing-universe",
-    title: "The Outsourcing Universe",
+    title: "The Outsourcing Universe — CROs, CMOs, and CDMOs",
     category: "Outsourcing",
     description: "No pharma company builds a drug alone. Discover who the CROs, CMOs, and CDMOs really are, what they do at each stage, and how they interact with drug sponsors.",
     difficulty: "Kernel",
@@ -719,7 +723,7 @@ export const KERNEL_VAULT: VaultItem[] = [
   },
   {
     id: "alliance-map",
-    title: "The Alliance Map",
+    title: "The Alliance Map — The Global Network",
     category: "Alliances",
     description: "Behind every drug approval is an invisible layer of cross-industry collaboration — standards bodies, data consortia, and pre-competitive alliances.",
     difficulty: "Fully Popped",
@@ -832,7 +836,7 @@ export const KERNEL_VAULT: VaultItem[] = [
   },
   {
     id: "standards-universe",
-    title: "The Standards Universe",
+    title: "The Standards Universe — The Rules of the Game",
     category: "Standards",
     description: "Every drug development activity operates inside a dense web of mandatory and voluntary standards. Think of it as the 'pop' in the popcorn process.",
     difficulty: "Fully Popped",
@@ -1221,6 +1225,154 @@ export const KERNEL_VAULT: VaultItem[] = [
               <h4 class="font-bold mb-2 text-blue-primary">Together</h4>
               <p class="text-sm text-text-muted">The foundation of reproducibility, traceability, and patient safety.</p>
             </div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+  {
+    id: "hl7-fhir",
+    title: "HL7 & FHIR — The Language of Healthcare Data",
+    category: "Standards",
+    description: "From hospital rooms to regulatory submissions — how a single data standard is quietly revolutionising pharma, from clinical trials to drug approvals.",
+    difficulty: "Kernel",
+    readTime: "18 min",
+    publishedAt: "2024-01-07",
+    content: `
+      <div class="prose prose-invert max-w-none">
+        <!-- Hero Section -->
+        <div class="mb-16 p-12 rounded-[3rem] bg-gradient-to-br from-blue-primary/20 via-blue-primary/5 to-transparent border border-blue-primary/30 relative overflow-hidden shadow-2xl shadow-blue-primary/5 text-center">
+          <div class="absolute -top-10 -right-10 p-8 opacity-10 text-[12rem] rotate-12">🌐</div>
+          <span class="inline-block px-4 py-1 rounded-full bg-blue-primary/10 border border-blue-primary/20 text-blue-primary text-xs font-bold uppercase tracking-widest mb-6">Healthcare Data Standards</span>
+          <h2 class="text-5xl font-serif font-bold mb-8 leading-tight">HL7 & FHIR:<br/><span class="text-blue-primary italic">The Language Healthcare Speaks</span></h2>
+          <p class="text-2xl leading-relaxed text-text-muted mb-8 max-w-3xl mx-auto">From hospital rooms to regulatory submissions — how a single data standard is quietly revolutionising pharma, from clinical trials to drug approvals.</p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <span class="px-4 py-2 bg-blue-primary/10 rounded-xl border border-blue-primary/20 text-xs font-mono">HL7 v2 · v3</span>
+            <span class="px-4 py-2 bg-blue-primary/10 rounded-xl border border-blue-primary/20 text-xs font-mono">FHIR R4 / R5</span>
+            <span class="px-4 py-2 bg-blue-primary/10 rounded-xl border border-blue-primary/20 text-xs font-mono">PQ/CMC</span>
+          </div>
+        </div>
+
+        <!-- What is HL7 -->
+        <div class="my-24">
+          <h2 class="text-4xl font-serif font-bold mb-8 italic">What is HL7?</h2>
+          <p class="text-xl leading-relaxed text-text-muted mb-8"><strong>HL7 stands for Health Level Seven</strong> — named after the seventh layer (the "application" layer) of the OSI communication model. It's a set of international standards for the exchange, integration, sharing, and retrieval of electronic health information.</p>
+          
+          <div class="p-10 bg-surface border-l-8 border-amber-primary rounded-3xl shadow-2xl mb-12">
+            <h4 class="text-xs font-mono text-amber-primary uppercase tracking-widest mb-4">🧩 Beginner Analogy</h4>
+            <p class="text-lg leading-relaxed">Imagine every hospital, clinic, pharmacy, and lab speaks a different dialect. HL7 is the <strong>universal translator</strong> — it defines a common grammar so that systems can actually understand each other. Without it, your MRI results at Hospital A can't talk to the GP's system across town.</p>
+          </div>
+
+          <div class="p-10 bg-blue-primary/5 border-l-8 border-blue-primary rounded-3xl shadow-2xl mb-12">
+            <h4 class="text-xs font-mono text-blue-primary uppercase tracking-widest mb-4">🔬 Pharma Perspective</h4>
+            <p class="text-lg leading-relaxed">In regulated pharma environments, HL7 is the backbone for clinical data exchange — from electronic health records (EHR) to adverse event reporting (ICSR / E2B), lab data, and increasingly, regulatory submissions under frameworks like <strong>SPL (Structured Product Labelling)</strong> and <strong>PQ/CMC</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="my-32">
+          <h2 class="text-4xl font-serif font-bold mb-16 text-center italic">A Brief History</h2>
+          <div class="space-y-12 relative before:absolute before:left-[23px] before:top-0 before:bottom-0 before:w-1 before:bg-gradient-to-b before:from-blue-primary before:to-transparent">
+            <div class="relative pl-20 group">
+              <div class="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-blue-primary flex items-center justify-center text-white font-bold shadow-[0_0_30px_rgba(59,130,246,0.5)] z-10">1987</div>
+              <h4 class="text-2xl font-bold mb-2">HL7 Founded</h4>
+              <p class="text-lg text-text-muted leading-relaxed">Health Level Seven International is founded in Ann Arbor, Michigan. First meeting draws 12 attendees working to standardise clinical data exchange.</p>
+            </div>
+            <div class="relative pl-20 group">
+              <div class="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-blue-primary flex items-center justify-center text-white font-bold shadow-[0_0_30px_rgba(59,130,246,0.5)] z-10">1994</div>
+              <h4 class="text-2xl font-bold mb-2">HL7 v2 Becomes Dominant</h4>
+              <p class="text-lg text-text-muted leading-relaxed">HL7 version 2 (pipe-delimited message format) becomes the most widely deployed healthcare messaging standard in the world — still used in 95%+ of US hospitals today.</p>
+            </div>
+            <div class="relative pl-20 group">
+              <div class="absolute left-0 top-0 w-12 h-12 rounded-2xl bg-blue-primary flex items-center justify-center text-white font-bold shadow-[0_0_30px_rgba(59,130,246,0.5)] z-10">2012</div>
+              <h4 class="text-2xl font-bold mb-2">FHIR is Born</h4>
+              <p class="text-lg text-text-muted leading-relaxed">Graham Grieve proposes "Resources for Health" (later FHIR). A fresh start: modern web APIs, JSON/XML, and developer-friendly design.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- What is FHIR -->
+        <div class="my-32">
+          <h2 class="text-4xl font-serif font-bold mb-8 italic">What is FHIR?</h2>
+          <p class="text-xl leading-relaxed text-text-muted mb-8"><strong>FHIR</strong> (pronounced "fire") stands for <strong>Fast Healthcare Interoperability Resources</strong>. It's the next-generation standard from HL7 — built using modern web technologies to make sharing healthcare data as easy as building a website.</p>
+
+          <div class="p-10 bg-surface border border-border rounded-[3rem] mb-12">
+            <h3 class="text-2xl font-bold mb-6 italic font-serif">The Big Idea: Lego Bricks for Data</h3>
+            <p class="text-lg text-text-muted leading-relaxed mb-8">Think of FHIR like <strong>Lego bricks for healthcare data</strong>. Each "Resource" (Patient, Medication, Observation, Substance) is a standardised brick. You can combine them in any way to build what you need — an app, a regulatory submission, a clinical trial database.</p>
+            
+            <div class="grid md:grid-cols-3 gap-6">
+              <div class="p-8 bg-bg border border-border rounded-3xl">
+                <div class="text-3xl mb-4">🌐</div>
+                <h4 class="font-bold mb-2">RESTful APIs</h4>
+                <p class="text-sm text-text-muted">Standard HTTP verbs (GET, POST) to read and update health records easily.</p>
+              </div>
+              <div class="p-8 bg-bg border border-border rounded-3xl">
+                <div class="text-3xl mb-4">📦</div>
+                <h4 class="font-bold mb-2">Resources</h4>
+                <p class="text-sm text-text-muted">Over 150 data types like Patient, Substance, and Ingredient definitions.</p>
+              </div>
+              <div class="p-8 bg-bg border border-border rounded-3xl">
+                <div class="text-3xl mb-4">🔗</div>
+                <h4 class="font-bold mb-2">JSON & XML</h4>
+                <p class="text-sm text-text-muted">Data is exchanged in developer-friendly formats used across the web.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PQ/CMC Section -->
+        <div class="my-32">
+          <div class="flex items-center gap-6 mb-12">
+            <div class="w-20 h-20 rounded-3xl bg-green-500/10 flex items-center justify-center text-green-500 text-4xl shadow-lg shadow-green-500/5">💊</div>
+            <div>
+              <h2 class="text-4xl font-serif font-bold italic">FHIR & PQ/CMC</h2>
+              <p class="text-xl text-text-muted">The secret to the perfect regulatory pop.</p>
+            </div>
+          </div>
+
+          <div class="p-12 bg-surface rounded-[3rem] border border-border shadow-2xl relative overflow-hidden mb-16">
+            <h4 class="text-xl font-bold mb-10 text-center uppercase tracking-widest text-text-muted">Key FHIR Resources in PQ/CMC</h4>
+            <div class="space-y-4 max-w-2xl mx-auto">
+              <div class="flex items-center gap-4 p-4 bg-green-500/10 rounded-2xl border border-green-500/20">
+                <div class="font-bold text-green-500 w-32">MedicinalProduct</div>
+                <div class="flex-1 text-sm text-text-muted">The drug product itself, identity and authorisation.</div>
+              </div>
+              <div class="flex items-center gap-4 p-4 bg-green-500/10 rounded-2xl border border-green-500/20">
+                <div class="font-bold text-green-500 w-32">Substance</div>
+                <div class="flex-1 text-sm text-text-muted">Active ingredients or excipients, chemical identity.</div>
+              </div>
+              <div class="flex items-center gap-4 p-4 bg-green-500/10 rounded-2xl border border-green-500/20">
+                <div class="font-bold text-green-500 w-32">Ingredient</div>
+                <div class="flex-1 text-sm text-text-muted">Component in formulation, quantity and strength.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Integration Engines -->
+        <div class="my-32">
+          <h2 class="text-4xl font-serif font-bold mb-12 text-center italic">Integration Engines</h2>
+          <p class="text-xl leading-relaxed text-text-muted mb-12 text-center">The plumbing of healthcare data — translating dialects across the ecosystem.</p>
+          
+          <div class="grid md:grid-cols-2 gap-8">
+            <div class="p-10 bg-surface border border-border rounded-[3rem] border-t-8 border-t-blue-primary">
+              <h4 class="text-2xl font-bold mb-4">Mirth Connect</h4>
+              <p class="text-lg text-text-muted leading-relaxed">The most widely deployed open-source engine. The "postal sorting office" for hospital HL7 v2 messages.</p>
+            </div>
+            <div class="p-10 bg-surface border border-border rounded-[3rem] border-t-8 border-t-violet-400">
+              <h4 class="text-2xl font-bold mb-4">InterSystems</h4>
+              <p class="text-lg text-text-muted leading-relaxed">Enterprise-grade platform with native FHIR support. Dominant in large medical centres and pharma pipelines.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="mt-40 p-16 rounded-[3.5rem] bg-surface border border-border text-center relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-primary to-transparent"></div>
+          <h2 class="text-4xl font-serif font-bold mb-8 italic">The Scientific Pursuit</h2>
+          <p class="text-xl text-text-muted max-w-3xl mx-auto leading-relaxed mb-12">The vision is a <strong>fully digital regulatory submission</strong> — no PDFs, no manual re-entry, no data loss. FHIR is the connective tissue that makes this possible.</p>
+          <div class="inline-flex items-center gap-3 px-8 py-4 bg-blue-primary text-white font-bold rounded-2xl shadow-xl shadow-blue-primary/20 hover:scale-105 transition-transform cursor-pointer">
+            Explore the Standards Universe →
           </div>
         </div>
       </div>

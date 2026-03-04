@@ -11,7 +11,7 @@ interface LabDetailProps {
 }
 
 export default function LabDetail({ video, onBack, onNavigate, guides }: LabDetailProps) {
-  const relatedKernel = guides.find(k => k.category === video.category);
+  const relatedKernels = guides.filter(k => k.category === video.category);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-5xl mx-auto px-6 py-12">
@@ -31,34 +31,42 @@ export default function LabDetail({ video, onBack, onNavigate, guides }: LabDeta
         />
       </div>
 
-      <div className="grid md:grid-cols-3 gap-12">
-        <div className="md:col-span-2">
-          <div className="text-xs font-mono text-blue-primary mb-4 uppercase tracking-[0.2em] font-bold">{video.category}</div>
-          <h1 className="font-serif text-4xl font-bold mb-6">{video.title}</h1>
-          <p className="text-xl text-text-muted leading-relaxed mb-8">{video.description}</p>
-        </div>
+      <div className="mb-12">
+        <div className="text-xs font-mono text-blue-primary mb-4 uppercase tracking-[0.2em] font-bold">{video.category}</div>
+        <h1 className="font-serif text-4xl font-bold mb-6">{video.title}</h1>
+        <p className="text-xl text-text-muted leading-relaxed mb-8">{video.description}</p>
+      </div>
 
-        <div className="space-y-8">
-          {relatedKernel && (
-            <div className="p-8 rounded-3xl bg-surface border border-border relative overflow-hidden group">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-amber-primary/5 rounded-full blur-2xl -mr-16 -mt-16" />
-              <div className="relative z-10">
-                <div className="w-12 h-12 rounded-2xl bg-amber-primary/10 flex items-center justify-center text-amber-primary mb-6">
-                  <BookMarked size={24} />
+      {relatedKernels.length > 0 && (
+        <div className="mt-12 pt-12 border-t border-border">
+          <h3 className="font-serif text-2xl font-bold mb-8 flex items-center gap-3">
+            <BookMarked size={24} className="text-amber-primary" /> 
+            Related Kernels
+          </h3>
+          <div className="flex flex-col gap-4">
+            {relatedKernels.map((kernel) => (
+              <div 
+                key={kernel.id}
+                className="group p-6 rounded-2xl bg-surface border border-border hover:border-amber-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
+              >
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-[10px] font-mono text-amber-primary uppercase tracking-widest">{kernel.category}</span>
+                  </div>
+                  <h4 className="text-xl font-bold group-hover:text-amber-primary transition-colors">{kernel.title}</h4>
+                  <p className="text-text-muted text-sm line-clamp-1 mt-1">{kernel.description}</p>
                 </div>
-                <h3 className="text-lg font-bold mb-2">Related Kernel</h3>
-                <p className="text-sm text-text-muted mb-6">Deepen your understanding with the companion guide for this topic.</p>
                 <button 
-                  onClick={() => onNavigate('kernel-detail', relatedKernel)}
-                  className="w-full py-4 bg-amber-primary text-bg font-bold rounded-xl flex items-center justify-center gap-2 hover:scale-[1.02] transition-transform"
+                  onClick={() => onNavigate('kernel-detail', kernel)}
+                  className="px-6 py-3 bg-amber-primary/10 border border-amber-primary/20 text-amber-primary text-sm font-bold rounded-xl hover:bg-amber-primary/20 transition-all whitespace-nowrap flex items-center gap-2"
                 >
                   Read Guide <ChevronRight size={16} />
                 </button>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 }

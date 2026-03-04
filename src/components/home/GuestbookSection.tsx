@@ -39,9 +39,9 @@ export default function GuestbookSection({ onNavigate }: GuestbookSectionProps) 
       <div className="text-center">
         <button 
           onClick={() => onNavigate('community-guestbook')}
-          className="text-amber-primary font-bold text-xl flex items-center gap-2 mx-auto hover:gap-3 transition-all group"
+          className="px-8 py-4 bg-amber-primary text-bg font-bold rounded-lg hover:bg-amber-light transition-all flex items-center gap-2 mx-auto shadow-lg shadow-amber-primary/20 group"
         >
-          Add your voice <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+          Add your voice <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </section>

@@ -10,6 +10,7 @@ export interface VideoInfo {
   description: string;
   category: string;
   publishedAt: string;
+  excludeKernelIds?: string[];
 }
 
 export interface VaultItem {

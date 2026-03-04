@@ -1,27 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface CarouselProps<T> {
   items: T[];
   renderItem: (item: T) => React.ReactNode;
-  autoRotate?: boolean;
-  interval?: number;
   activeColor?: string;
 }
 
 export default function Carousel<T>({ 
   items, 
   renderItem, 
-  autoRotate = false, 
-  interval = 5000,
   activeColor = 'bg-amber-primary'
 }: CarouselProps<T>) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const [visibleItems, setVisibleItems] = useState(3);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
+  const [currentIndex, setCurrentIndex] = useState(0);
+  
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) setVisibleItems(1);
@@ -36,41 +29,34 @@ export default function Carousel<T>({
   const maxIndex = Math.max(0, items.length - visibleItems);
 
   const next = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    if (currentIndex < maxIndex) {
+      setCurrentIndex(prev => prev + 1);
+    }
   };
 
   const prev = () => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1);
+    }
   };
 
-  useEffect(() => {
-    if (autoRotate && !isPaused) {
-      timerRef.current = setInterval(next, interval);
-    }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [autoRotate, isPaused, items.length, maxIndex]);
+  if (!items || items.length === 0) return null;
 
   return (
-    <div 
-      className="relative group"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
+    <div className="relative group w-full">
       <div className="overflow-hidden py-8">
         <div 
-          className="flex transition-transform duration-500 ease-out gap-6"
+          className="flex transition-transform duration-500 ease-in-out"
           style={{ 
+            // Move by exactly one item width (1/visibleItems of the container width)
             transform: `translateX(-${currentIndex * (100 / visibleItems)}%)`,
-            width: `${(items.length / visibleItems) * 100}%` 
           }}
         >
           {items.map((item, i) => (
             <div 
               key={i} 
-              style={{ width: `${100 / items.length}%` }}
-              className="px-1"
+              className="flex-none px-3"
+              style={{ width: `${100 / visibleItems}%` }}
             >
               {renderItem(item)}
             </div>
@@ -81,13 +67,21 @@ export default function Carousel<T>({
       {/* Controls */}
       <button 
         onClick={prev}
-        className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all z-10 shadow-lg hover:bg-surface-hover"
+        disabled={currentIndex === 0}
+        className={`absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center transition-all z-10 shadow-xl 
+          ${currentIndex === 0 
+            ? 'opacity-20 cursor-not-allowed grayscale pointer-events-none' 
+            : 'opacity-0 group-hover:opacity-100 group-hover:translate-x-2 hover:bg-surface-hover'}`}
       >
         <ChevronLeft size={24} />
       </button>
       <button 
         onClick={next}
-        className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all z-10 shadow-lg hover:bg-surface-hover"
+        disabled={currentIndex >= maxIndex}
+        className={`absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-12 h-12 rounded-full bg-surface border border-border flex items-center justify-center transition-all z-10 shadow-xl 
+          ${currentIndex >= maxIndex 
+            ? 'opacity-20 cursor-not-allowed grayscale pointer-events-none' 
+            : 'opacity-0 group-hover:opacity-100 group-hover:-translate-x-2 hover:bg-surface-hover'}`}
       >
         <ChevronRight size={24} />
       </button>

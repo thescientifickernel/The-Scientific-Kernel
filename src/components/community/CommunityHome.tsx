@@ -43,7 +43,7 @@ export default function CommunityHome({ onNavigate }: CommunityHomeProps) {
           <p className="text-text-muted text-lg mb-8 leading-relaxed">
             If something clicked, share what popped for you and add your voice to the wall.
           </p>
-          <div className="text-amber-primary font-bold text-lg flex items-center gap-2 hover:gap-3 transition-all">
+          <div className="text-blue-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
             Add your voice <ArrowRight size={20} />
           </div>
         </motion.div>

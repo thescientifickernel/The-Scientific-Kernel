@@ -384,9 +384,9 @@ function GuestbookSection({ onNavigate }: { onNavigate: (s: Section) => void }) 
       <div className="text-center">
         <button 
           onClick={() => onNavigate('community-guestbook')}
-          className="text-amber-primary font-bold text-xl flex items-center gap-2 mx-auto hover:gap-3 transition-all group"
+          className="px-8 py-4 bg-amber-primary text-bg font-bold rounded-lg hover:bg-amber-light transition-all flex items-center gap-2 mx-auto shadow-lg shadow-amber-primary/20 group"
         >
-          Add your voice <ArrowRight size={24} className="group-hover:translate-x-1 transition-transform" />
+          Add your voice <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
         </button>
       </div>
     </section>
@@ -564,7 +564,10 @@ function KernelDetail({ item, onBack }: { item: VaultItem, onBack: () => void })
 }
 
 function LabDetail({ video, onBack, onNavigate }: { video: VideoInfo, onBack: () => void, onNavigate: (s: Section, data?: any) => void }) {
-  const relatedKernel = KERNEL_VAULT.find(k => k.category === video.category);
+  const relatedKernels = KERNEL_VAULT.filter(k => {
+    if (video.excludeKernelIds?.includes(k.id)) return false;
+    return k.category === video.category;
+  });
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="max-w-5xl mx-auto px-6 py-12">
@@ -584,30 +587,50 @@ function LabDetail({ video, onBack, onNavigate }: { video: VideoInfo, onBack: ()
         ></iframe>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-12">
-        <div className="md:col-span-2">
-          <div className="text-xs font-mono text-blue-primary mb-4 uppercase tracking-widest">{video.category}</div>
-          <h1 className="font-serif text-4xl font-bold mb-6">{video.title}</h1>
-          <p className="text-xl text-text-muted leading-relaxed mb-8">{video.description}</p>
-        </div>
-
-        <div>
-          {relatedKernel && (
-            <div className="p-6 rounded-2xl bg-surface border border-border">
-              <h3 className="font-bold mb-4 flex items-center gap-2"><BookOpen size={18} className="text-amber-primary" /> Related Kernel</h3>
-              <div className="text-sm font-bold mb-2">{relatedKernel.title}</div>
-              <p className="text-xs text-text-muted mb-6 line-clamp-2">{relatedKernel.description}</p>
-              <button 
-                onClick={() => onNavigate('kernel-detail', relatedKernel)}
-                className="w-full py-3 bg-amber-primary/10 border border-amber-primary/20 text-amber-primary text-xs font-bold rounded-lg hover:bg-amber-primary/20 transition-all"
-              >
-                Read Guide
-              </button>
-            </div>
-          )}
-        </div>
+      <div className="mb-12">
+        <div className="text-xs font-mono text-blue-primary mb-4 uppercase tracking-widest">{video.category}</div>
+        <h1 className="font-serif text-4xl font-bold mb-6">{video.title}</h1>
+        <p className="text-xl text-text-muted leading-relaxed mb-8">{video.description}</p>
       </div>
+
+      {relatedKernels.length > 0 && (
+        <RelatedKernelsSection relatedKernels={relatedKernels} onNavigate={onNavigate} />
+      )}
     </motion.div>
+  );
+}
+
+function RelatedKernelsSection({ relatedKernels, onNavigate }: { relatedKernels: VaultItem[], onNavigate: (s: Section, data?: any) => void }) {
+  return (
+    <div className="mt-12 pt-12 border-t border-border">
+      <h3 className="font-serif text-2xl font-bold mb-8 flex items-center gap-3">
+        <BookOpen size={24} className="text-amber-primary" /> 
+        Related Kernels
+      </h3>
+      <div className="flex flex-col gap-4">
+        {relatedKernels.map((kernel) => (
+          <div 
+            key={kernel.id}
+            className="group p-6 rounded-2xl bg-surface border border-border hover:border-amber-primary/30 transition-all flex flex-col md:flex-row md:items-center justify-between gap-6"
+          >
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-2">
+                <DifficultyBadge level={kernel.difficulty} />
+                <span className="text-[10px] font-mono text-amber-primary uppercase tracking-widest">{kernel.category}</span>
+              </div>
+              <h4 className="text-xl font-bold group-hover:text-amber-primary transition-colors">{kernel.title}</h4>
+              <p className="text-text-muted text-sm line-clamp-1 mt-1">{kernel.description}</p>
+            </div>
+            <button 
+              onClick={() => onNavigate('kernel-detail', kernel)}
+              className="px-6 py-3 bg-amber-primary/10 border border-amber-primary/20 text-amber-primary text-sm font-bold rounded-xl hover:bg-amber-primary/20 transition-all whitespace-nowrap flex items-center gap-2"
+            >
+              Read Guide <ArrowRight size={16} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -650,7 +673,7 @@ function Community({ onNavigate }: { onNavigate: (s: Section) => void }) {
           <p className="text-text-muted text-lg mb-8 leading-relaxed">
             If something popped for you, share it and add your voice to the wall.
           </p>
-          <div className="text-amber-primary font-bold text-lg flex items-center gap-2 group-hover:gap-4 transition-all">
+          <div className="text-blue-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
             Add your voice <ArrowRight size={20} />
           </div>
         </motion.div>
